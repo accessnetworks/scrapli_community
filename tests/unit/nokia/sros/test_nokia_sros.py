@@ -3,6 +3,7 @@ import re
 import pytest
 
 from scrapli_community.nokia.sros.nokia_sros import (
+    CLASSIC_ARAM_PRIVILEGE_LEVELS,
     CLASSIC_DEFAULT_PRIVILEGE_LEVELS,
     DEFAULT_PRIVILEGE_LEVELS,
 )
@@ -16,6 +17,8 @@ from scrapli_community.nokia.sros.nokia_sros import (
         ("configuration", "*(ex)[/]\nA:admin@sr1#"),
         ("configuration", "!(ex)[/]\nA:admin@sr1#"),
         ("configuration", "(ex)[]\nA:admin@sr1#"),
+        ("configuration", "(ex:bof)[/]\nA:admin@sr1#"),
+        ("configuration", "*(ex:bof)[/]\nA:admin@sr1#"),
         ("configuration_with_path", "(ex)[/somepath]\nA:admin@sr1#"),
         ("configuration_with_path", "*(ex)[/somepath]\nA:admin@sr1#"),
         ("configuration_with_path", "!(ex)[/somepath]\nA:admin@sr1#"),
@@ -26,6 +29,8 @@ from scrapli_community.nokia.sros.nokia_sros import (
         "configuration_pending_change",
         "configuration_datastore_change",
         "configuration_no_path",
+        "bof_configuration",
+        "bof_configuration_pending_change",
         "configuration_with_path",
         "configuration_with_path_pending_change",
         "configuration_with_path_datastore_change",
@@ -63,6 +68,21 @@ def test_default_prompt_patterns_classic_variant(priv_pattern):
     prompt = priv_pattern[1]
 
     prompt_pattern = CLASSIC_DEFAULT_PRIVILEGE_LEVELS.get(priv_level_name).pattern
+    match = re.search(pattern=prompt_pattern, string=prompt, flags=re.M | re.I)
+
+    assert match
+
+
+@pytest.mark.parametrize(
+    "priv_pattern",
+    [("exec", "leg:noa>#")],
+    ids=["exec"],
+)
+def test_default_prompt_patterns_classic_aram_variant(priv_pattern):
+    priv_level_name = priv_pattern[0]
+    prompt = priv_pattern[1]
+
+    prompt_pattern = CLASSIC_ARAM_PRIVILEGE_LEVELS.get(priv_level_name).pattern
     match = re.search(pattern=prompt_pattern, string=prompt, flags=re.M | re.I)
 
     assert match

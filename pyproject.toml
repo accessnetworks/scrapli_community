@@ -28,17 +28,17 @@ license = { file = "LICENSE" }
 authors = [
     { name = "Carl Montanari", email = "carl.r.montanari@gmail.com" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
@@ -55,6 +55,16 @@ Homepage = "https://github.com/scrapli/scrapli_community"
 [tool.setuptools.dynamic]
 version = { attr = "scrapli_community.__version__" }
 dependencies = { file = "requirements.txt" }
+# dev-darwin is same as dev but excludes ssh2-python
+optional-dependencies.dev-darwin = { file = [
+    "requirements-dev.txt",
+    "requirements-textfsm.txt",
+    "requirements-genie.txt",
+    "requirements-ttp.txt",
+    "requirements-paramiko.txt",
+    "requirements-asyncssh.txt",
+    "requirements-community.txt",
+] }
 optional-dependencies.dev = { file = [
     "requirements-dev.txt",
 ] }
@@ -69,6 +79,7 @@ scrapli_community = [
 line-length = 100
 target-version = [
     "py311",
+    "py313",
 ]
 
 [tool.isort]
@@ -95,16 +106,6 @@ warn_redundant_casts = true
 warn_unused_configs = true
 strict_optional = true
 
-
-[tool.pylama]
-linters = "mccabe,pycodestyle,pylint"
-skip = ".nox/*,.private/*,build/*,docs/*,private/*,site/*,tests/*,venv/*"
-
-[tool.pylama.pycodestyle]
-max_line_length = 100
-
-[tool.pylama.pylint]
-rcfile = ".pylintrc"
 
 [tool.pydocstyle]
 match-dir = "^scrapli_community/*"

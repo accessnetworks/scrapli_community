@@ -1,4 +1,5 @@
 """scrapli_community.mikrotik.routeros.mikrotik_routeros"""
+
 from scrapli_community.mikrotik.routeros.async_driver import (
     AsyncMikrotikRouterOSDriver,
     default_async_on_close,
@@ -20,5 +21,7 @@ SCRAPLI_PLATFORM = {
         "async_on_open": None,
         "sync_on_close": default_sync_on_close,
         "async_on_close": default_async_on_close,
+        "routeros_login_options": "+ct511w4098h",
     },
+    "variants": {"with_login_option_e": {"routeros_login_options": "+cet511w4098h"}},
 }

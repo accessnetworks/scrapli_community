@@ -1,4 +1,5 @@
 """scrapli_community.mikrotik.routeros.sync_driver"""
+
 from typing import Any, List, Optional, Union
 
 from scrapli.driver import GenericDriver
@@ -41,7 +42,8 @@ class MikrotikRouterOSDriver(GenericDriver):
 
         # Append login options to the username according to
         # https://wiki.mikrotik.com/wiki/Manual:Console_login_process
-        kwargs["auth_username"] += "+cet511w4098h"
+        kwargs["auth_username"] += kwargs["routeros_login_options"]
+        kwargs.pop("routeros_login_options")
 
         super().__init__(**kwargs)
 
@@ -51,6 +53,7 @@ class MikrotikRouterOSDriver(GenericDriver):
         *,
         strip_prompt: bool = True,
         failed_when_contains: Optional[Union[str, List[str]]] = None,
+        eager_input: bool = False,
         timeout_ops: Optional[float] = None,
     ) -> Response:
         """
@@ -60,6 +63,8 @@ class MikrotikRouterOSDriver(GenericDriver):
             command: string to send to device in privilege exec mode
             strip_prompt: True/False strip prompt from returned output
             failed_when_contains: string or list of strings indicating failure if found in response
+            eager_input: when true does *not* try to read our input off the channel -- generally
+                this should be left alone unless you know what you are doing!
             timeout_ops: timeout ops value for this operation; only sets the timeout_ops value for
                 the duration of the operation, value is reset to initial value after operation is
                 completed
@@ -84,6 +89,7 @@ class MikrotikRouterOSDriver(GenericDriver):
             command,
             strip_prompt=strip_prompt,
             failed_when_contains=failed_when_contains,
+            eager_input=eager_input,
             timeout_ops=timeout_ops,
         )
 

@@ -1,4 +1,6 @@
 """scrapli_community.noxfile"""
+
+import os
 import re
 import sys
 from pathlib import Path
@@ -9,6 +11,8 @@ import nox
 nox.options.error_on_missing_interpreters = False
 nox.options.stop_on_first_error = False
 nox.options.default_venv_backend = "venv"
+
+PRE = bool(os.environ.get("PRE_RELEASE"))
 
 
 def parse_requirements(dev: bool = True) -> Dict[str, str]:
@@ -63,7 +67,19 @@ PLATFORM: str = sys.platform
 SKIP_LIST: List[str] = []
 
 
-@nox.session(python=["3.8", "3.9", "3.10", "3.11", "3.12"])
+def _get_install_test_args() -> List[str]:
+    args = [".[dev]"]
+
+    if sys.platform == "darwin":
+        args = [".[dev-darwin]"]
+
+    if PRE:
+        args.append("--pre")
+
+    return args
+
+
+@nox.session(python=["3.9", "3.10", "3.11", "3.12", "3.13"])
 def unit_tests(session):
     """
     Nox run unit tests
@@ -82,7 +98,7 @@ def unit_tests(session):
         return
 
     session.install("-U", "setuptools", "wheel", "pip")
-    session.install(".[dev]")
+    session.install(*_get_install_test_args())
     session.run(
         "python",
         "-m",
@@ -97,7 +113,7 @@ def unit_tests(session):
     )
 
 
-@nox.session(python=["3.11"])
+@nox.session(python=["3.13"])
 def isort(session):
     """
     Nox run isort
@@ -117,7 +133,7 @@ def isort(session):
     session.run("python", "-m", "isort", "-c", ".")
 
 
-@nox.session(python=["3.11"])
+@nox.session(python=["3.13"])
 def black(session):
     """
     Nox run black
@@ -137,10 +153,10 @@ def black(session):
     session.run("python", "-m", "black", "--check", ".")
 
 
-@nox.session(python=["3.11"])
-def pylama(session):
+@nox.session(python=["3.13"])
+def pylint(session):
     """
-    Nox run pylama
+    Nox run pylint
 
     Args:
         session: nox session
@@ -152,11 +168,11 @@ def pylama(session):
         N/A
 
     """
-    session.install(".[dev]")
-    session.run("python", "-m", "pylama", ".")
+    session.install(*_get_install_test_args())
+    session.run("python", "-m", "pylint", "scrapli_community/")
 
 
-@nox.session(python=["3.11"])
+@nox.session(python=["3.13"])
 def pydocstyle(session):
     """
     Nox run pydocstyle
@@ -176,7 +192,7 @@ def pydocstyle(session):
     session.run("python", "-m", "pydocstyle", ".")
 
 
-@nox.session(python=["3.11"])
+@nox.session(python=["3.13"])
 def mypy(session):
     """
     Nox run mypy
@@ -197,7 +213,7 @@ def mypy(session):
     session.run("python", "-m", "mypy", "--strict", "scrapli_community/")
 
 
-@nox.session(python=["3.11"])
+@nox.session(python=["3.13"])
 def darglint(session):
     """
     Nox run darglint

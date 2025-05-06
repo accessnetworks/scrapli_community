@@ -1,4 +1,5 @@
 """scrapli_community.huawei.smartax.async_driver"""
+
 from typing import Any
 
 from scrapli.driver import AsyncNetworkDriver
@@ -39,6 +40,8 @@ async def default_async_on_close(conn: AsyncNetworkDriver) -> None:
     """
     await conn.acquire_priv(desired_priv=conn.default_desired_privilege_level)
     conn.channel.write(channel_input="quit")
+    conn.channel.send_return()
+    conn.channel.write(channel_input="y")
     conn.channel.send_return()
 
 

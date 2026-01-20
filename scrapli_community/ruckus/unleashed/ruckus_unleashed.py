@@ -46,7 +46,7 @@ DEFAULT_PRIVILEGE_LEVELS = {
     ),
     "configuration": (
         PrivilegeLevel(
-            pattern=r"^[a-z0-9]{1,24}\(conf[a-z0-9\-]{0,24}\)#\s*$",
+            pattern=r"^[a-z0-9]{1,24}\(conf[a-z0-9\-]{0,48}\)#\s*$",
             name="configuration",
             previous_priv="privilege_exec",
             deescalate="end",
@@ -91,6 +91,7 @@ SCRAPLI_PLATFORM = {
         "failed_when_contains": [
             "The command is",
             "is invalid",
+            "must be",
             "must consist",
         ],
         "textfsm_platform": "",

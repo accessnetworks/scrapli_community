@@ -13,7 +13,7 @@ from scrapli_community.ruckus.fastiron.sync_driver import (
 DEFAULT_PRIVILEGE_LEVELS = {
     "exec": (
         PrivilegeLevel(
-            pattern=r"^[a-z0-9.\-_@/:]{1,63}[a-z0-9 .\-_@/:]{0,63}>$",
+            pattern=r"^[a-z0-9 .\-_@()/:]{1,63}>$",
             name="exec",
             previous_priv="",
             deescalate="",
@@ -24,7 +24,7 @@ DEFAULT_PRIVILEGE_LEVELS = {
     ),
     "privilege_exec": (
         PrivilegeLevel(
-            pattern=r"^[a-z0-9.\-_@/:]{1,63}[a-z0-9 .\-_@/:]{0,63}#$",
+            pattern=r"^[a-z0-9 .\-_@()/:]{1,63}#$",
             name="privilege_exec",
             previous_priv="exec",
             deescalate="quit",
@@ -35,7 +35,7 @@ DEFAULT_PRIVILEGE_LEVELS = {
     ),
     "configuration": (
         PrivilegeLevel(
-            pattern=r"^[a-z0-9.\-_@/:]{1,63}[a-z0-9 .\-_@/:]{0,63}\(conf[a-z0-9.\-@/:\+]{0,32}\)#$",
+            pattern=r"^[a-z0-9 .\-_@()/:]{1,63}\(conf[a-z0-9.\-@/:\+]{0,32}\)#$",
             name="configuration",
             previous_priv="privilege_exec",
             deescalate="end",
